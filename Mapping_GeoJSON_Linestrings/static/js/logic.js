@@ -1,5 +1,5 @@
 // Accessing the airport GeoJSON URL
-let torontoData = "https://raw.githubusercontent.com/thegreatkeej/Mapping_Earthquakes/Mapping_GeoJSON_Points/torontoRoutes.json";
+let torontoData = "https://raw.githubusercontent.com/thegreatkeej/Mapping_Earthquakes/Mapping_GeoJSON_Linestrings/torontoRoutes.json";
 // Grabbing our GeoJSON data.
 d3.json(torontoData).then(function(data) {
   console.log(data);
