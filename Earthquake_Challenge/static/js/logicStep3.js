@@ -1,5 +1,5 @@
 //Accessing the earthquake GeoJSON URL
-let earthquakeData = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+let earthquake = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
 // This function determines the radius of the earthquake marker based on its magnitude.
 // Earthquakes with a magnitude of 0 will be plotted with a radius of 1.
@@ -45,6 +45,26 @@ function styleInfo(feature) {
   };
 }
 
+d3.json(earthquake).then(function(data) {  
+
+// Creating a GeoJSON layer with the retrieved data.
+L.geoJSON(data, {
+  // We turn each feature into a circleMarker on the map.
+  pointToLayer: function(feature, latlng) {
+      console.log(data);
+      return L.circleMarker(latlng);
+    },
+  // We set the style for each circleMarker using our styleInfo function.
+style: styleInfo,
+  // We create a popup for each circleMarker to display the magnitude and
+  //  location of the earthquake after the marker has been created and styled.
+  onEachFeature: function(feature, layer) {
+  layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
+}
+}).addTo(map);
+  });
+
+
 // Street view option for our map.
 let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -87,70 +107,8 @@ let map = L.map('mapid', {
   layers: [streets]
 })
 
-// Create the earthquake layer for our map.
-let earthquakes = new L.layerGroup();
-
-// We define an object that contains the overlays.
-// This overlay will be visible all the time.
-let overlays = {
-  Earthquakes: earthquakes
-};
-
-d3.json(earthquakeData).then(function(data) {  
-
-  // Creating a GeoJSON layer with the retrieved data.
-  L.geoJSON(data, {
-    // We turn each feature into a circleMarker on the map.
-    pointToLayer: function(feature, latlng) {
-        console.log(data);
-        return L.circleMarker(latlng);
-      },
-    // We set the style for each circleMarker using our styleInfo function.
-  style: styleInfo,
-    // We create a popup for each circleMarker to display the magnitude and
-    //  location of the earthquake after the marker has been created and styled.
-    onEachFeature: function(feature, layer) {
-    layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
-  }
-  }).addTo(earthquakes);
-    });
-
-  // Create a legend control object.
-  let legend = L.control({
-    position: "bottomright"
-  });
-
-  legend.onAdd = function() {
-    let div = L.DomUtil.create("div", "info legend");
-
-    const magnitudes = [0, 1, 2, 3, 4, 5];
-  const colors = [
-    "papayawhip",
-    "pink",
-    "plum",
-    "fuchsia",
-    "blueviolet",
-    "blue"
-  ];
-    // Looping through our intervals to generate a label with a colored square for each interval.
-  for (var i = 0; i < magnitudes.length; i++) {
-    console.log(colors[i]);
-    div.innerHTML +=
-      "<i style='background: " + colors[i] + "'></i> " +
-      magnitudes[i] + (magnitudes[i + 1] ? "&ndash;" + magnitudes[i + 1] + "<br>" : "+");
-  }
-  return div;
-  };
-
-  
-  legend.addTo(map);
-
-  // Then we add the earthquakes layer
-earthquakes.addTo(map);
-
-// Then we add a control to the map that will allow the user to change
-// which layers are visible.
-L.control.layers(baseMaps, overlays).addTo(map);
+// Pass our map layers into our layers control and add the layers control to the map.
+L.control.layers(baseMaps).addTo(map);
 
 // To change the map's style, change the map id using the list of Mapbox ids below:
 
