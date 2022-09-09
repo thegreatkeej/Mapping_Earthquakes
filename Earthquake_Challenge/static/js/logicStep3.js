@@ -1,24 +1,74 @@
-// Accessing the airport GeoJSON URL
-let torontoHoods = "https://raw.githubusercontent.com/thegreatkeej/Mapping_Earthquakes/main/torontoNeighborhoods.json";
-// Grabbing our GeoJSON data.
+//Accessing the earthquake GeoJSON URL
+let earthquake = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
-let myStyle = {
-  fillColor: "yellow",
-  color: "blue",
-  weight: 1,
-  opacity: 1,
-  fillOpacity: 0.8
-};
-d3.json(torontoHoods).then(function(data) {
-  console.log(data);
+// This function determines the radius of the earthquake marker based on its magnitude.
+// Earthquakes with a magnitude of 0 will be plotted with a radius of 1.
+function getRadius(magnitude) {
+  if (magnitude === 0) {
+    return 1;
+  }
+  return magnitude * 4;
+}
+
+// This function determines the color of the circle based on the magnitude of the earthquake.
+function getColor(magnitude) {
+  if (magnitude > 5) {
+    return "blue";
+  }
+  if (magnitude > 4) {
+    return "blueviolet";
+  }
+  if (magnitude > 3) {
+    return "fuchsia";
+  }
+  if (magnitude > 2) {
+    return "plum";
+  }
+  if (magnitude > 1) {
+    return "pink";
+  }
+  return "papayawhip";
+}
+
+// This function returns the style data for each of the earthquakes we plot on
+// the map. We pass the magnitude of the earthquake into a function
+// to calculate the radius.
+function styleInfo(feature) {
+  return {
+    opacity: 1,
+    fillOpacity: 1,
+    fillColor: getColor(feature.properties.mag),
+    color: "#000000",
+    radius: getRadius(feature.properties.mag),
+    stroke: true,
+    weight: 0.5
+  };
+}
+
+d3.json(earthquake).then(function(data) {  
+
 // Creating a GeoJSON layer with the retrieved data.
-L.geoJSON(data).addTo(map);
-});
+L.geoJSON(data, {
+  // We turn each feature into a circleMarker on the map.
+  pointToLayer: function(feature, latlng) {
+      console.log(data);
+      return L.circleMarker(latlng);
+    },
+  // We set the style for each circleMarker using our styleInfo function.
+style: styleInfo,
+  // We create a popup for each circleMarker to display the magnitude and
+  //  location of the earthquake after the marker has been created and styled.
+  onEachFeature: function(feature, layer) {
+  layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
+}
+}).addTo(map);
+  });
+
 
 // Street view option for our map.
 let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 12,
+    maxZoom: 18,
     accessToken: API_KEY
 });
 
@@ -52,8 +102,8 @@ let baseMaps = {
 
 // Create the map object with center, zoom level and default layer.
 let map = L.map('mapid', {
-  center: [43.7, 79.3],
-  zoom: 11,
+  center: [39.5, -98.5],
+  zoom: 3,
   layers: [streets]
 })
 
