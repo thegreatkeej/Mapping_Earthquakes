@@ -1,11 +1,14 @@
 // Accessing the airport GeoJSON URL
-let torontoHoods = "https://raw.githubusercontent.com/thegreatkeej/Mapping_Earthquakes/Mapping_GeoJSON_Linestrings/torontoNeighborhoods.json";
+let torontoHoods = "https://raw.githubusercontent.com/thegreatkeej/Mapping_Earthquakes/main/torontoNeighborhoods.json";
 // Grabbing our GeoJSON data.
-// Create a style for the lines.
+
 let myStyle = {
-  color: "#ffffa1",
-  weight: 2
-}
+  fillColor: "yellow",
+  color: "blue",
+  weight: 1,
+  opacity: 1,
+  fillOpacity: 0.8
+};
 d3.json(torontoHoods).then(function(data) {
   console.log(data);
 // Creating a GeoJSON layer with the retrieved data.
@@ -49,9 +52,9 @@ let baseMaps = {
 
 // Create the map object with center, zoom level and default layer.
 let map = L.map('mapid', {
-  center: [30, 30],
-  zoom: 2,
-  layers: [satelliteStreets]
+  center: [43.7, 79.3],
+  zoom: 11,
+  layers: [streets]
 })
 
 // Pass our map layers into our layers control and add the layers control to the map.
