@@ -10,6 +10,26 @@ function getRadius(magnitude) {
   return magnitude * 4;
 }
 
+// This function determines the color of the circle based on the magnitude of the earthquake.
+function getColor(magnitude) {
+  if (magnitude > 5) {
+    return "blue";
+  }
+  if (magnitude > 4) {
+    return "blueviolet";
+  }
+  if (magnitude > 3) {
+    return "fuchsia";
+  }
+  if (magnitude > 2) {
+    return "plum";
+  }
+  if (magnitude > 1) {
+    return "pink";
+  }
+  return "papayawhip";
+}
+
 // This function returns the style data for each of the earthquakes we plot on
 // the map. We pass the magnitude of the earthquake into a function
 // to calculate the radius.
@@ -17,7 +37,7 @@ function styleInfo(feature) {
   return {
     opacity: 1,
     fillOpacity: 1,
-    fillColor: "purple",
+    fillColor: getColor(feature.properties.mag),
     color: "#000000",
     radius: getRadius(feature.properties.mag),
     stroke: true,
@@ -29,16 +49,19 @@ d3.json(earthquake).then(function(data) {
 
 // Creating a GeoJSON layer with the retrieved data.
 L.geoJSON(data, {
-
   // We turn each feature into a circleMarker on the map.
-  
   pointToLayer: function(feature, latlng) {
-              console.log(data);
-              return L.circleMarker(latlng);
-          },
-        // We set the style for each circleMarker using our styleInfo function.
-      style: styleInfo
-      }).addTo(map);
+      console.log(data);
+      return L.circleMarker(latlng);
+    },
+  // We set the style for each circleMarker using our styleInfo function.
+style: styleInfo,
+  // We create a popup for each circleMarker to display the magnitude and
+  //  location of the earthquake after the marker has been created and styled.
+  onEachFeature: function(feature, layer) {
+  layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
+}
+}).addTo(map);
   });
 
 
