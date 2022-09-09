@@ -1,10 +1,21 @@
 // Accessing the airport GeoJSON URL
 let torontoData = "https://raw.githubusercontent.com/thegreatkeej/Mapping_Earthquakes/Mapping_GeoJSON_Linestrings/torontoRoutes.json";
 // Grabbing our GeoJSON data.
+// Create a style for the lines.
+let myStyle = {
+  color: "#ffffa1",
+  weight: 2
+}
 d3.json(torontoData).then(function(data) {
   console.log(data);
 // Creating a GeoJSON layer with the retrieved data.
-L.geoJSON(data).addTo(map);
+L.geoJSON(data,{
+  style: myStyle,
+  onEachFeature: function(feature, layer){
+    layer.bindPopup("<h3> Airline: " + feature.properties.airline + "</h3> <hr><h3> Destination: "
+    + feature.properties.dst + "</h3>");
+  }
+}).addTo(map);
 });
 
 // Street view option for our map.
