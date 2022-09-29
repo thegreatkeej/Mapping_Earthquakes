@@ -3,9 +3,7 @@ Using an API and GeoJson data collected to create an interactive earthquake map.
 ## Overview of Project
 
 ### Purpose
-The purpose of this project is to practice using leaflet on several different 
-JSON files. The end assignment was to grab earthquake data and crete a color coded 
-map with pop-ups.
+The purpose of this project was to practice  using leaflet on several different JSON files. The outcome is a script that can grab earthquake data and create a color coded map with pop-ups.
 
 ## Analysis and Challenges
 
