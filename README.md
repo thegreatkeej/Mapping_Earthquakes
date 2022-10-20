@@ -8,18 +8,13 @@ The purpose of this project was to practice  using leaflet on several different 
 ## Analysis and Challenges
 
 ### Analysis of Outcomes
-Visually, you can see that the majority of earthquakes occur along tectonic plates.
+Visually, you can see that there is a pattern of earthquake activity. The majority of earthquakes occur along tectonic plates and in distant seas.
 
-## Challenges and Difficulties Encountered
-
-### Challenge
-I didn't like the colors(given) in the assignment. I searched online for 
-different color pallettes, chose the ones I liked and refactored the code.
+## Difficulties Encountered
 
 ### Difficulty
-I am still getting used to itteration so some of the loops were hard for me.
-But I am getting better with more practice.
+I am still getting used to itteration, but I am getting better with more practice.
 
-## Results
+## Summary
 This html shows a dynamic map of earthquakes with convienient pop-ups and a color
 coded display.
